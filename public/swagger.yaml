@@ -1,0 +1,152 @@
+swagger: '2.0'
+
+info:
+  version: "0.0.1"
+  title: insurancewebappbackend API
+
+consumes:
+  - application/json
+
+produces:
+  - application/json
+
+paths:
+  /health:
+    get:
+      operationId: get
+      description: Get health status of insurancewebappbackend
+      tags:
+        - Healthcheck
+      responses:
+        200:
+          description: "Health check response"
+          schema:
+            $ref: "#/definitions/healthResponse"
+          examples:
+            application/json: { "status": "UP"}
+
+  /claim:
+    post:
+      operationId: post
+      tags:
+        - Claim
+      description: Create a new claim
+      responses:
+        201:
+          description: "Claim creation response"
+
+    get:
+      operationId: get
+      tags:
+        - Claim
+      description: List all existing claims
+      responses:
+        200:
+          description: "List of claims"
+          schema:
+            $ref: '#/definitions/Claims'        
+  /claim/{claimId}:
+    parameters:
+      - name: claimId
+        in: path
+        required: true
+        description: The id of the claim to retrieve
+        type: string
+        format: uuid
+
+    get:
+      operationId: get
+      tags:
+        - Claim
+      description: "Get details of a claim"
+      responses:
+        200:
+          description: "Claim details response"
+          schema:
+            $ref: '#/definitions/Claim'
+    patch:
+      operationId: patch
+      tags:
+        - Claim
+      description: "Append information to a claim"
+      responses:
+        200:
+          description: "Claim updated successfull"
+
+  /claim/{claimId}/image:
+    parameters:
+      - name: claimId
+        in: path
+        required: true
+        description: The id of the claim to retrieve
+        type: string
+        format: uuid
+    get:
+      operationId: get
+      parameters:
+        - in: query
+          name: key
+          description: "Key of the image object as given in the claim details"
+          required: true
+          type: string
+      tags:
+        - Claim
+      description: "Retrieve an image from object storage"
+      responses:
+        200:
+          description: "Binary data of the image"
+    post:
+      operationId: post
+      tags:
+        - Claim
+      description: "Upload new picture to claim"
+      responses:
+        200:
+          description: "Claim updated successfull"
+
+  /claim/{claimId}/archive:
+    post:
+      operationId: post
+      tags:
+        - Claim
+      parameters:
+        - name: claimId
+          in: path
+          required: true
+          description: The id of the claim to retrieve
+          type: string
+          format: uuid
+      description: "Archive claim to object storage"
+      responses:
+        200:
+          description: "Claim archived successfull"
+
+definitions:
+  Claim:
+    required:
+      - claimId
+      - created
+      - lastUpdate
+    properties:
+      claimId:
+        type: String
+        format: uuid
+      state:
+        type: String
+      created:
+        type: String
+        format: date-time
+      lastUpdate:
+        type: String
+        format: date-time
+
+  Claims:
+    type: array
+    items:
+      $ref: '#/definitions/Claim'
+
+  healthResponse:
+    type: "object"
+    properties:
+      status:
+        type: "string"
