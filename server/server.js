@@ -16,7 +16,6 @@ const path = require("path");
 const logger = log4js.getLogger(appName);
 const app = express();
 app.use(log4js.connectLogger(logger, { level: process.env.LOG_LEVEL || "info" }));
-const passport = require("passport");
 const serviceManager = require("./services/service-manager");
 require("./services/index")(app);
 require("./routers/index")(app);
