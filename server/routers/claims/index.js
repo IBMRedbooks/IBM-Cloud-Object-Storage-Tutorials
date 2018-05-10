@@ -78,7 +78,7 @@ module.exports = function(app) {
 
 	// GET a list of claims
 	router.get("/", function (req, res) {
-		req.cloudant.listUserClaims(req.userAccount.userId).then((claims) => {
+		req.cloudant.listAllClaims().then((claims) => {
 			res.json(claims);
 		}).catch((err) => {
 			logger.error(err);
@@ -88,9 +88,7 @@ module.exports = function(app) {
 
 	// Register the route /claim
 	app.use("/claim",
-		passport.authenticate(serviceManager.get("appid-web-strategy-name")),
 		bodyParser.json(),
 		common.cloudantInjector,
-		common.userInjector,
 		router);
 };

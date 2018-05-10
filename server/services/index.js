@@ -7,5 +7,4 @@ IBMCloudEnv.init();
 
 module.exports = function(app){
 	require("./service-cloudant")(app, serviceManager);
-	require("./service-appid")(app, serviceManager);
 };

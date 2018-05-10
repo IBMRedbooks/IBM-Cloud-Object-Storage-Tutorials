@@ -31,9 +31,5 @@ app.listen(port, function(){
 
 });
 
-app.use("/home", passport.authenticate(serviceManager.get("appid-web-strategy-name")), (req, res) => {
-	res.sendFile(path.join(__dirname, "../public", "home.html"));
-});
-
 // serve the files out of ./public as our main files
 app.use(express.static("./public"));

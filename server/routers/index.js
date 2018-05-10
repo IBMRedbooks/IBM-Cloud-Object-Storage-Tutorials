@@ -4,5 +4,4 @@ module.exports = function(app){
 	require("./swagger")(app);
 	require("./health")(app);
 	require("./claims")(app);
-	require("./user")(app);
 };

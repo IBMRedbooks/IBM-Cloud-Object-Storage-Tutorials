@@ -50,25 +50,11 @@ $('#editClaimButton').click(function (e) {
   // load the edit claim page with existing claim information
   var claimId =  document.getElementById("claimSummaryId").innerHTML;
 
-  $.ajax({
-    type: 'GET',
-    url: '/user',
-    dataType: 'json',
-    contentType: 'application/json',
-    cache: false,
-    timeout: 1000,
-    success: function(user) {
-      console.log('Retrieved user ' + user.name + ' (' + user.userId + ')');
-      document.getElementById('policyUserName').innerHTML = user.name;
+  // We have claimId now, so use that to render the claim page
+  uiDisplayEditClaim(claimId);
 
-      // We have claimId now, so use that to render the claim page
-      uiDisplayEditClaim(claimId);
-
-      // Then continue loading the claim details
-      retrieveClaimDetails(claimId);
-
-      }
-    });
+  // Then continue loading the claim details
+  retrieveClaimDetails(claimId);
 });
 
 
@@ -78,44 +64,23 @@ $('#editClaimButton').click(function (e) {
     console.log("Getting new claim");
     e.preventDefault();
 
-    // load the user to display some nice policy information
-    $.ajax({
-      type: 'GET',
-      url: '/user',
-      dataType: 'json',
-      contentType: 'application/json',
-      cache: false,
-      timeout: 1000,
-      success: function(user) {
-        console.log('Retrieved user ' + user.name + ' (' + user.userId + ')');
-        document.getElementById('policyUserName').innerHTML = user.name;
+    // create a claim to start working on
+    $.post(
+      "/claim",
+      {},
+      function(data, textStatus, jqXHR) {
+        console.log (textStatus);
+        if (textStatus == "success") {
+          var claimFQDN = jqXHR.getResponseHeader("Location");
+          var claimId = claimFQDN.split("/")[2];
+          var fullClaimLocation = jqXHR.getResponseHeader("Location");
+          console.log('found claim location', fullClaimLocation);
 
-        // create a claim to start working on
-        $.post(
-          "/claim",
-          {},
-          function(data, textStatus, jqXHR) {
-            console.log (textStatus);
-            if (textStatus == "success") {
-              var claimFQDN = jqXHR.getResponseHeader("Location");
-              var claimId = claimFQDN.split("/")[2];
-              var fullClaimLocation = jqXHR.getResponseHeader("Location");
-              console.log('found claim location', fullClaimLocation);
-
-              // Now render the page
-              uiDisplayEditClaim(claimId);
-            } else {
-              alert("Failed to create claim!");
-            }
-        });
-      },
-      error: function(jqXHR, exception) {
-        // TODO: make this do something better
-        alert('Could not get user information! ' + exception);
-        //var policy_drop_down = "<option>Could not load policies</option>";
-        //document.getElementById("all_policies").innerHTML=policy_drop_down;
-        //document.getElementById("all_policies").disabled = true;
-      }
+          // Now render the page
+          uiDisplayEditClaim(claimId);
+        } else {
+          alert("Failed to create claim!");
+        }
     });
   });
 

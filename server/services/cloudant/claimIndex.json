@@ -7,9 +7,6 @@
      {
        "type" : "asc"
      },
-     {
-       "userId": "asc"
-     },
     {
      "claimId": "asc"
     },

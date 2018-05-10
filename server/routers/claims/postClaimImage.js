@@ -91,7 +91,6 @@ function _processImage(req,res) {
 
 	const append = {
 		claimId: req.params.claimId,
-		userId: req.userAccount.userId,
 		images: [imageContainer]
 	};
 
