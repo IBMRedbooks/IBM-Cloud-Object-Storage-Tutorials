@@ -11,6 +11,9 @@ const log4js = require("log4js");
 
 const logger = log4js.getLogger("claim-post-image");
 
+function _setupRoute(router) {
+	return router.post("/:claimId/image", upload.any(), _processImage);
+}
 
 module.exports.init = _setupRoute;
 /*
@@ -51,10 +54,6 @@ const upload = multer({
 	storage: storage,
 	fileFilter: multerFileFilter
 });
-
-function _setupRoute(router) {
-	return router.post("/:claimId/image", upload.any(), _processImage);
-}
 
 // Gets the weather observation in weatherSituation that is closest to the
 // dateTime provided
