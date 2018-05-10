@@ -110,24 +110,24 @@ function _processImage(req,res) {
 			} else {
 				resolve(data);
 			}
-		})
+		});
 	})
-	.then(data => {
+		.then(data => {
 		// create a unique key for object storage
-		let origKey = `original/${req.params.claimId}/${dateTime}/${file.filename}`;
-		// store key of original image in claimImageRecord for later retrieval
-		image.original = origKey;
+			let origKey = `original/${req.params.claimId}/${dateTime}/${file.filename}`;
+			// store key of original image in claimImageRecord for later retrieval
+			image.original = origKey;
 
-		// store the original user-uploaded image in a COS bucket
-		return cos.doCreateObject(cos.originalBucket, file.mimetype, origKey, data);
-	})
-	.then(() => {
-		logger.info("Uploaded original image to COS");
+			// store the original user-uploaded image in a COS bucket
+			return cos.doCreateObject(cos.originalBucket, file.mimetype, origKey, data);
+		})
+		.then(() => {
+			logger.info("Uploaded original image to COS");
 
-		// get the exif metadata from the uploaded image
-		return imageProcessor.getMetadata(file.path);
-	})
-	.then(metadata => {
+			// get the exif metadata from the uploaded image
+			return imageProcessor.getMetadata(file.path);
+		})
+		.then(metadata => {
 			// some images don't contain exif metadata, so let's check
 			if (metadata.exif) {
 				logger.info("Extracted image metadata");
