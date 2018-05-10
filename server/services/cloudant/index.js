@@ -45,13 +45,15 @@ function _init(cloudant_url) {
 			logger.debug(`Database ${DB_NAME} does not exist, creating it`);
 			return cloudant.db.create(DB_NAME);
 		}
-	}).then(() => {
+	})
+	.then(() => {
 		logger.debug(`Using database ${DB_NAME}`);
 		db = cloudant.db.use(DB_NAME);
-	}).then(() => db.index(CLAIM_INDEX)) // create the claim index
-		.catch(e => {
-			logger.warn(e._data);
-		});
+	})
+	.then(() => db.index(CLAIM_INDEX)) // create the claim index
+	.catch(e => {
+		logger.warn(e._data);
+	});
 }
 
 /**
