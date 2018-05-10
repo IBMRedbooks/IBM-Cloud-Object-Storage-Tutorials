@@ -248,7 +248,7 @@ $('#editClaimButton').click(function (e) {
 
  function getClaimImagesMap(claim) {
    var images = {};
-   if (claims.images) {
+   if (claim.images) {
      for (var i=0; i<claim.images.length; i++) {
        var imageIds = Object.keys(claim.images[i]);
        for (var j=0; j<imageIds.length; j++) {
