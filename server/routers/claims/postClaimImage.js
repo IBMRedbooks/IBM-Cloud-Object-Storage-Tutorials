@@ -10,6 +10,9 @@ const log4js = require("log4js");
 
 const logger = log4js.getLogger("claim-post-image");
 
+function _setupRoute(router) {
+	return router.post("/:claimId/image", upload.any(), _processImage);
+}
 
 module.exports.init = _setupRoute;
 /*
@@ -50,25 +53,6 @@ const upload = multer({
 	storage: storage,
 	fileFilter: multerFileFilter
 });
-
-function _setupRoute(router) {
-	return router.post("/:claimId/image", upload.any(), _processImage);
-}
-
-// Gets the weather observation in weatherSituation that is closest to the
-// dateTime provided
-function getClosestWeatherObservation(dateTime, weatherSituation) {
-	const imageTime = dateTime / 1000;
-	// sort observations by their distance to image time
-	const closestObservation = __.sortBy(weatherSituation.observations, (observation) => Math.abs(imageTime - observation.valid_time_gmt));
-
-	// Weather api only returns data from last 24h.
-	// A correct implementation would not add data if the image is outside of that window
-	// for the sake of this demo, we're still adding the weather closest to the time
-	// the picture has been taken
-	logger.info("Weather:" + closestObservation[0]);
-	return closestObservation[0];
-}
 
 /*
  * 1. Receive image
