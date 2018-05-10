@@ -4,8 +4,6 @@ const serviceManager = require("../../services/service-manager");
 
 const log4js = require("log4js");
 const common = require("../common");
-const postClaimImage = require("./postClaimImage").init;
-const getClaimImage = require("./getClaimImage").init;
 
 const bodyParser = require("body-parser");
 const logger = log4js.getLogger("claim-controller");
@@ -14,8 +12,6 @@ const logger = log4js.getLogger("claim-controller");
 module.exports = function(app) {
 	const router = express.Router();
 
-	postClaimImage(router);
-	getClaimImage(router);
 	// Ensures claim exist and attaches it to the request
 	const claimInjector = function (req, res, next) {
 		// get the claimId from the request parameters

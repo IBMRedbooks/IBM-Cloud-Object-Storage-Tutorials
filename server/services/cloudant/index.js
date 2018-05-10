@@ -6,7 +6,6 @@ const log4js = require("log4js");
 const uuid = require("uuid/v4");
 const moment = require("moment");
 const __ = require("lodash");
-const cos = require("../cos");
 
 // Globals
 let db;
@@ -197,7 +196,6 @@ function _archiveClaim(claimId) {
 			logger.trace("Will archive: " + data);
 			// prefix object by year, week and claimId, such that hive partitioning may benefit from it
 			const now = moment.utc();
-			return cos.doCreateObject("claims-archived", `${now.year()}/${now.week()}/${claimId}/data.json`, "application/json", data);
 		})
 		.then(() => _appendClaim({ claimId: claimId , state: "archived"}));
 }
