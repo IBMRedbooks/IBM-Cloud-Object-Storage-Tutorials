@@ -120,53 +120,7 @@ $('#editClaimButton').click(function (e) {
      });
  });
 
- function initMap(gpsLat, gpsLatRef, gpsLong, gpsLongRef) {
-   console.log(gpsLat);
-   console.log(gpsLatRef);
-   console.log(gpsLong);
-   console.log(gpsLongRef);
-   var latDegrees = gpsLat.split(',')[0].split('/')[0].trim();
-   var latMins = gpsLat.split(',')[1].split('/')[0].trim();
-   var longDegrees = gpsLong.split(',')[0].split('/')[0].trim();
-   var longMins = gpsLong.split(',')[1].split('/')[0].trim();
-   var latString;
-   var longString;
-   if (gpsLatRef === "N") {
-     latString = latDegrees + "." + latMins;
-     console.log(latString);
-   }
-   if (gpsLatRef === "S") {
-     latString = "-" + latDegrees + "." + latMins;
-     console.log(latString)
-   }
-   var latitude = filterFloat(latString);
-   console.log(latitude)
-   if (gpsLongRef === "E") {
-     longString = longDegrees + "." + longMins;
-     console.log(longString);
-   }
-   if (gpsLongRef === "W") {
-     longString = "-" + longDegrees + "." + longMins;
-     console.log(longString);
-   }
-   var longitude = filterFloat(longString);
-   console.log(longitude);
-   var centerPosition = {
-     lat: latitude,
-     lng: longitude
-   }
-   console.log(centerPosition);
-   var map = new google.maps.Map(document.getElementById('map'), {
-     zoom: 10,
-     center: centerPosition
-   });
-   var marker = new google.maps.Marker({
-     position: centerPosition,
-     map: map
-   });
- }
-
- function renderImageDetails(imageMetadata, weatherDetails, vrDetails) {
+ function renderImageDetails(vrDetails) {
    var table_content = "<tr>"
    table_content += "<td>Car Color</td>";
    if (vrDetails && vrDetails.carColor) {
@@ -181,30 +135,17 @@ $('#editClaimButton').click(function (e) {
    table_content += "</tr>"
    table_content += "<tr>";
    table_content += "<td>Weather Conditions on Incident Date</td>";
-   if (weatherDetails) {
-      table_content += "<td>" + weatherDetails.wx_phrase + " in " + weatherDetails.obs_name + "</td>";
-   } else {
-     table_content += "<td>Weather not available.</td>";
-   }
+   table_content += "<td>Weather not available.</td>";
    table_content += "</tr>"
    table_content += "<tr>";
    table_content += "<td>Approxiate Date and Time of Incident</td>"
-   if (imageMetadata && imageMetadata.dateTime) {
-      table_content += "<td>"+ imageMetadata.dateTime + "</td>";
-   } else {
-     table_content += "<td>Time not available.</td>";
-   }
+   table_content += "<td>Time not available.</td>";
    table_content += "</tr>";
    table_content += "<tr>";
    table_content += "<td>Approximate Location of Incident</td>"
-   if (imageMetadata && imageMetadata.gpsLatitude && imageMetadata.gpsLongitude) {
-     table_content += "<td><div id=\"map\"></div><td>"
-   } else {
-     table_content += "<td>Location not available.</td>";
-   }
+   table_content += "<td>Location not available.</td>";
    table_content += "<td></td>"
    document.getElementById("imageDetailsBody").innerHTML=table_content;
-   initMap(imageMetadata.gpsLatitude, imageMetadata.gpsLatitudeRef, imageMetadata.gpsLongitude, imageMetadata.gpsLongitudeRef);
    document.getElementById("confirmClaimLegend").style.display="block";
    document.getElementById("confirmClaimBtn").style.display="block";
  }
@@ -268,8 +209,7 @@ $('#editClaimButton').click(function (e) {
               "<p> " + side + " of your car </p>" +
               "</div>";
             document.getElementById("car_" + side).innerHTML = imageTag;
-            renderImageDetails(image.imageMetadata, image.weatherData,
-              image.vrClassification);
+            renderImageDetails(image.vrClassification);
          }
        }
      },
