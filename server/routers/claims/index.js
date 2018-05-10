@@ -78,7 +78,7 @@ module.exports = function(app) {
 
 	// GET a list of claims
 	router.get("/", function (req, res) {
-		req.cloudant.listUserClaims(req.userAccount.userId).then((claims) => {
+		req.cloudant.listUserClaims(req.userRecord.userId).then((claims) => {
 			res.json(claims);
 		}).catch((err) => {
 			logger.error(err);

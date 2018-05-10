@@ -39,7 +39,7 @@ module.exports = function(app) {
 	// an account if it doesn't already exist.
 	// Note: the injector does all the work here.
 	router.get("/", function (req, res) {
-		res.json(req.userAccount);
+		res.json(req.userRecord);
 	});
 
 
