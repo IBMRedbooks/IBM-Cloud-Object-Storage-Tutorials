@@ -2,6 +2,7 @@
 node_modules
 node_modules_linux
 vcap-local.js
+server/localdev-config.json
 credentials.json
 package-lock.json
 weather.js
