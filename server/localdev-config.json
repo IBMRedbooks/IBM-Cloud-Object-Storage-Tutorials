@@ -1,0 +1,19 @@
+{
+  "appid_tenant_id": "",
+  "appid_client_id": "",
+  "appid_secret": "",
+  "appid_oauth_server_url": "",
+  "appid_profiles_url": "",
+  "cloudant_username": "",
+  "cloudant_password": "",
+  "cloudant_url": "",
+  "cos_original_bucket": "",
+  "cos_normalized_bucket": "",
+  "cos_api_key": "",
+  "cos_service_instance_id": "",
+  "cos_endpoint": "s3.us-south.objectstorage.softlayer.net",
+  "cos_ibm_auth_endpoint": "https://iam.bluemix.net/oidc/token",
+  "weather_company_data_url": "",
+  "weather_company_data_username": "",
+  "weather_company_data_password": ""
+}
