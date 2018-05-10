@@ -20,3 +20,5 @@ Insurance Claim project with IBM Cloud Object Storage based on ExpressJS on Node
 #### Local Development Tools Setup (optional)
 
 - Install the latest [NodeJS](https://nodejs.org/en/download/) 6+ LTS version.
+- Fill in all the blank fields in `server/localdev-config.json` to match the
+  credentials for your services.
