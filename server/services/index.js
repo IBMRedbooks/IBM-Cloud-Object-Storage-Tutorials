@@ -6,5 +6,4 @@ var serviceManager = require("./service-manager");
 IBMCloudEnv.init();
 
 module.exports = function(app){
-	require("./service-cloudant")(app, serviceManager);
 };
