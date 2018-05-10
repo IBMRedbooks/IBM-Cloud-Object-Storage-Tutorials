@@ -10,7 +10,6 @@ $(document).ready(function(){
   $("#allClaimsBtn").click(function(e){
     let claim_rows = '';
     $.getJSON('/claim', function(data) {
-      alert('blah!');
       if (data) {
         $.each(data, function(i, claim) {
           var table_entry = '<tr><td>';
