@@ -204,9 +204,13 @@ function _processImage(req,res) {
 					res.status(200).end();
 				});
 		})
+		.then(() => {
+			fs.unlinkSync(file.path);
+		})
 		.catch((err) => {
 			logger.debug("in the CATCH block", err);
 			logger.debug(util.inspect(err));
+			fs.unlinkSync(file.path);
 			res.status(500).send(err.message);
 		});
 }
