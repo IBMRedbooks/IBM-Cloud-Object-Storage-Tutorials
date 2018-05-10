@@ -1,10 +1,8 @@
 .DS_Store
 node_modules
 node_modules_linux
-server/localdev-config.json
-server/localdev-config.json
 vcap-local.js
+server/localdev-config.json
 credentials.json
-localdev-config.json
 package-lock.json
 weather.js
