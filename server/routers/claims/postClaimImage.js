@@ -2,7 +2,6 @@ const util = require("util");
 const fs = require("fs");
 const uuid = require("uuid/v1");
 const cos = require("../../services/cos/index");
-const vrService = require("../../services/visual-recognition/vr");
 const imageProcessor = require("../../services/image-processing/processor");
 const __ = require("lodash");
 const multer = require("multer");
@@ -93,8 +92,6 @@ function _processImage(req,res) {
 		images: [imageContainer]
 	};
 
-	image.vrClassification = {};
-
 	// create a timestamp to use when uploading the images
 	let dateTime = Date.now();
 
@@ -126,38 +123,6 @@ function _processImage(req,res) {
 			return imageProcessor.resize(file.path);
 		})
 		.then(resizedImg => {
-			return vrService.validateCar(resizedImg)
-				.then(isCarProbability => {
-					if (isCarProbability.length === 0) {
-						throw new Error("Sorry, This is not a car! Nice try though ;)");
-					} else if (isCarProbability[0].score < 0.5) {
-						throw new Error("Sorry, we don't think this is a car. Nice try though ;)");
-					}
-
-					return vrService.getCarDamage(resizedImg);
-				})
-				.then(carDamage => {
-					logger.info("CAR DAMAGE", carDamage[0].class, carDamage[0].score);
-					image.vrClassification.carDamage = carDamage;
-
-					return vrService.getCarColor(resizedImg);
-				})
-				.then(carColor => {
-					logger.info("CAR COLOR", carColor[0].class, carColor[0].score);
-					image.vrClassification.carColor = carColor;
-
-					// get the position of the car in the image using the VR service
-					return vrService.getCarPosition(resizedImg);
-				})
-				.then(carPosition => {
-					logger.info("GOT CAR POSITION");
-
-					// add the VR classification to the claim image record
-					image.vrClassification.carPosition = carPosition;
-
-					// assign the top guess of classification for the claim
-					append[carPosition[0].classes[0].class] = imageId;
-
 					// store the normalized image in a COS bucket
 					let normKey = `normalized/${req.params.claimId}/${dateTime}/${file.filename}`;
 					// store key of normalized image in claimImageRecord for later retrieval
@@ -170,8 +135,7 @@ function _processImage(req,res) {
 					return req.cloudant.appendClaim(append);
 				}).then(() => {
 					res.status(200).end();
-				});
-		})
+				})
 		.then(() => {
 			fs.unlinkSync(file.path);
 		})

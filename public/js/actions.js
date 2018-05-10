@@ -15,19 +15,15 @@ $(document).ready(function(){
           var table_entry = '<tr><td>';
 
           var images = getClaimImagesMap(claim);
-          var sides = ['left', 'right', 'back', 'front'];
-          var rendered = false;
-          for (var i=0; i<sides.length; i++) {
-            var side = sides[i];
-            if (!rendered && claim.hasOwnProperty('car_' + side)) {
-               var imageId = claim['car_' + side];
-               console.log('Rendering thumbnail for ' + side + ' image ' + imageId);
-               var image = images[imageId];
-               var imageTag = createImageTag(image, claim.claimId, side);
-               table_entry += imageTag;
-               rendered = true;
-            }
+
+          if (Object.keys(images).length > 0) {
+              imageId = Object.keys(images)[0];
+              image = images[imageId];
+              console.log('image: ' + JSON.stringify(image));
+              var imageTag = createImageTag(image, claim.claimId, 'front');
+              table_entry += imageTag;
           }
+
           table_entry += '</td>';
           table_entry += '<td>' + claim.claimId + '</td><td>' + claim.created + '</td>';
           table_entry += '<td><a href="#" onclick="navEditClaim(\'' + claim.claimId + '\')">Edit Claim</a></td></tr>';
@@ -120,14 +116,10 @@ $('#editClaimButton').click(function (e) {
      });
  });
 
- function renderImageDetails(vrDetails) {
+ function renderImageDetails() {
    var table_content = "<tr>"
    table_content += "<td>Car Color</td>";
-   if (vrDetails && vrDetails.carColor) {
-      table_content += "<td>" + vrDetails.carColor[0].class + "</td>";
-   } else {
-     table_content += "<td>Color not available.</td>";
-   }
+   table_content += "<td>Color not available.</td>";
    table_content += "</tr>"
    table_content += "<tr>";
    table_content += "<td>Damage Type</td>";
@@ -197,20 +189,18 @@ $('#editClaimButton').click(function (e) {
          document.getElementById("car_" + side).innerHTML = "";
        }
 
-       // find each image and display it, updating claim details to use the last views
-       for (var i=0; i<sides.length; i++) {
-         var side = sides[i];
-         if (data.hasOwnProperty('car_' + side)) {
-            var imageId = data['car_' + side];
-            console.log('Rendering details for ' + side + ' image ' + imageId);
-            var image = images[imageId];
-            var imageTag = createImageTag(image, claimId, side);
-            imageTag += "<div class=\"caption\">" +
-              "<p> " + side + " of your car </p>" +
-              "</div>";
-            document.getElementById("car_" + side).innerHTML = imageTag;
-            renderImageDetails(image.vrClassification);
-         }
+       // find the first image that exists, and display it.
+       if (Object.keys(images).length > 0) {
+           imageId = Object.keys(images)[0];
+           image = images[imageId];
+           console.log('image: ' + JSON.stringify(image));
+           var imageTag = createImageTag(image, claimJSON.claimId, 'front');
+           imageTag += "<div class=\"caption\">" +
+             "<p>Your car</p>" +
+             "</div>";
+           document.getElementById("car_front").innerHTML = imageTag;
+
+           renderImageDetails();
        }
      },
      error: function() {
