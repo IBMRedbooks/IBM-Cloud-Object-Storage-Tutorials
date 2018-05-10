@@ -103,24 +103,31 @@ function _processImage(req,res) {
 	let file = req.files[0];
 
 	// read the uploaded image file from the tmp directory
-	fs.readFile(file.path, (err, data) => {
-		if (err) throw err;
+	new Promise((resolve, reject) => {
+		fs.readFile(file.path, (err, data) => {
+			if (err) {
+				reject(err);
+			} else {
+				resolve(data);
+			}
+		})
+	})
+	.then(data => {
 		// create a unique key for object storage
 		let origKey = `original/${req.params.claimId}/${dateTime}/${file.filename}`;
 		// store key of original image in claimImageRecord for later retrieval
 		image.original = origKey;
 
 		// store the original user-uploaded image in a COS bucket
-		cos.doCreateObject(cos.originalBucket, file.mimetype, origKey, data)
-			.then(function() {
-				logger.info("Uploaded original image to COS");
-			});
-	});
+		return cos.doCreateObject(cos.originalBucket, file.mimetype, origKey, data);
+	})
+	.then(() => {
+		logger.info("Uploaded original image to COS");
 
-	// get the exif metadata from the uploaded image
-	imageProcessor.getMetadata(file.path)
-		.then(metadata => {
-
+		// get the exif metadata from the uploaded image
+		return imageProcessor.getMetadata(file.path);
+	})
+	.then(metadata => {
 			// some images don't contain exif metadata, so let's check
 			if (metadata.exif) {
 				logger.info("Extracted image metadata");
