@@ -20,8 +20,6 @@ const _checkImageMagick = (func, ...args) => {
 };
 
 module.exports.resize = (...args) => _checkImageMagick(_resize,...args);
-module.exports.getMetadata = (...args) => _checkImageMagick(_getMetadata,...args);
-module.exports.getLatLon = _getLatLon;
 
 // Private methods
 
@@ -72,27 +70,4 @@ function isImagePortrait(imageData) {
 		if(ratio < 1) return true;
 		return false;
 	});
-}
-
-function _getMetadata(imageData) {
-	return new Promise(function(resolve, reject) {
-		im.readMetadata(imageData, function(err, metadata) {
-			if(err) {
-				reject(err);
-			} else {
-				resolve(metadata);
-			}
-		});
-	});
-}
-
-function _getLatLon(metadata) {
-	var gpsLatitude = metadata.gpsLatitude;
-	var gpsLatitudeRef = metadata.gpsLatitudeRef;
-
-	var gpsLongitude = metadata.gpsLongitude;
-	var gpsLongitudeRef = metadata.gpsLongitudeRef;
-	if (gpsLatitude && gpsLongitude && gpsLongitudeRef && gpsLatitudeRef) {
-		return dms2dec(gpsLatitude, gpsLatitudeRef, gpsLongitude, gpsLongitudeRef);
-	}
 }

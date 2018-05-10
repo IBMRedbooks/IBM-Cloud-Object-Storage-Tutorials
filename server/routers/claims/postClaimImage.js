@@ -4,7 +4,6 @@ const uuid = require("uuid/v1");
 const cos = require("../../services/cos/index");
 const vrService = require("../../services/visual-recognition/vr");
 const imageProcessor = require("../../services/image-processing/processor");
-const weather = require("../../services/weather/weather-data");
 const __ = require("lodash");
 const multer = require("multer");
 
@@ -122,36 +121,6 @@ function _processImage(req,res) {
 	})
 	.then(() => {
 		logger.info("Uploaded original image to COS");
-
-		// get the exif metadata from the uploaded image
-		return imageProcessor.getMetadata(file.path);
-	})
-	.then(metadata => {
-			// some images don't contain exif metadata, so let's check
-			if (metadata.exif) {
-				logger.info("Extracted image metadata");
-				image.imageMetadata = metadata.exif;
-
-				// get the lat,lon from the image metadata
-				const latLon = imageProcessor.getLatLon(image.imageMetadata);
-				if (!latLon) {
-					return;
-				}
-				logger.info("exif lat,lon", latLon);
-
-				logger.info(`getting weather situation for lat:${latLon[0]} lon:${latLon[1]} @ time: ${image.imageMetadata.dateTimeOriginal}`);
-				return weather.getWeatherSituation(latLon[0], latLon[1]);
-			}
-			// we don't have any metadata to use for weather so just return;
-			logger.warn("No image metadata, skipping Weather API");
-			return;
-		})
-		.then((weatherSituation) => {
-
-			if (weatherSituation) {
-				image.weatherData = getClosestWeatherObservation(
-					image.imageMetadata.dateTimeOriginal, weatherSituation);
-			}
 
 			// resize the image to get an normalized thumbnail
 			return imageProcessor.resize(file.path);
