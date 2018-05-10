@@ -21,7 +21,6 @@ module.exports.createClaim = _createClaim;
 module.exports.appendClaim = _appendClaim;
 module.exports.getClaim = _getClaim;
 module.exports.listAllClaims = _listAllClaims;
-module.exports.listUserClaims = _listUserClaims;
 module.exports.archiveClaim = _archiveClaim;
 
 
