@@ -248,11 +248,13 @@ $('#editClaimButton').click(function (e) {
 
  function getClaimImagesMap(claim) {
    var images = {};
-   for (var i=0; i<claim.images.length; i++) {
-     var imageIds = Object.keys(claim.images[i]);
-     for (var j=0; j<imageIds.length; j++) {
-       var imageId = imageIds[j];
-       images[imageId] = claim.images[i][imageId];
+   if (claims.images) {
+     for (var i=0; i<claim.images.length; i++) {
+       var imageIds = Object.keys(claim.images[i]);
+       for (var j=0; j<imageIds.length; j++) {
+         var imageId = imageIds[j];
+         images[imageId] = claim.images[i][imageId];
+       }
      }
    }
    return images;
