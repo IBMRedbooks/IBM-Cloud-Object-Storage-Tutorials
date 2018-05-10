@@ -12,7 +12,6 @@ const cos = require("../cos");
 let db;
 const DB_NAME = "car_claims";
 const CLAIM_INDEX = require("./claimIndex.json");
-const POLICY_INDEX = require("./policyIndex.json");
 const USER_INDEX = require("./userIndex.json");
 const logger = log4js.getLogger("cloudant-client");
 
@@ -23,17 +22,13 @@ module.exports.createClaim = _createClaim;
 module.exports.appendClaim = _appendClaim;
 module.exports.getClaim = _getClaim;
 module.exports.listAllClaims = _listAllClaims;
-module.exports.listUserClaims = _listUserClaims;
 module.exports.archiveClaim = _archiveClaim;
+module.exports.listUserClaims = _listUserClaims;
 module.exports.createUser = _createUser;
 module.exports.getUser = _getUser;
 module.exports.listUsers = _listUsers;
 module.exports.findUserByIdentity = _findUserByIdentity;
 module.exports.findOrCreateUser = _findOrCreateUser;
-module.exports.createPolicy = _createPolicy;
-module.exports.getPolicy = _getPolicy;
-module.exports.listAllPolicies = _listAllPolicies;
-module.exports.listUserPolicies = _listUserPolicies;
 
 
 // Private Methods ------------------------------------------------------------>
@@ -53,24 +48,24 @@ function _init(cloudant_url) {
 
 	// list all databases and create ours if it's not present
 	return cloudant.db.list().then((db) => {
-		const found = db && db.indexOf(DB_NAME) !== -1;
-		if (!found) {
-			logger.debug(`Database ${DB_NAME} does not exist, creating it`);
-			return cloudant.db.create(DB_NAME);
-		}
-	}).then(() => {
-		logger.debug(`Using database ${DB_NAME}`);
-		db = cloudant.db.use(DB_NAME);
-	}).then(() => db.index(CLAIM_INDEX)) // create the claim index
-		.catch(e => {
-			logger.warn(e._data);
-		}).then(() => db.index(POLICY_INDEX)) // create the policy index
-		.catch(e => {
-			logger.warn(e._data);
-		}).then(() => db.index(USER_INDEX)) // create the user index
-		.catch(e => {
-			logger.warn(e._data);
-		});
+	    const found = db && db.indexOf(DB_NAME) !== -1;
+	    if (!found) {
+	      logger.debug(`Database ${DB_NAME} does not exist, creating it`);
+	      return cloudant.db.create(DB_NAME);
+	    }
+	  })
+		.then(() => {
+	    logger.debug(`Using database ${DB_NAME}`);
+	    db = cloudant.db.use(DB_NAME);
+	  })
+		.then(() => db.index(CLAIM_INDEX)) // create the claim index
+	  .catch(e => {
+	    logger.warn(e._data);
+	  })
+	  .then(() => db.index(USER_INDEX)) // create the user index
+	  .catch(e => {
+	    logger.warn(e._data);
+	  });
 }
 
 /**
@@ -100,18 +95,6 @@ function _createUser(userDetails) {
 	return db.insert(document).then((d) => {
 		logger.debug(d);
 		return document.userId;
-	});
-}
-
-function _createPolicy(policyDetails) {
-	// create the document from provided details, generated UUID and created date
-	const document = Object.assign({},policyDetails, {type: "policy", policyId: uuid(), created: moment.utc()});
-	// just in case someone tried to set the id
-	delete document._id;
-	// insert the document and return the claimId
-	return db.insert(document).then((d) => {
-		logger.debug(d);
-		return document.policyId;
 	});
 }
 
@@ -189,43 +172,6 @@ function _getClaim(claimId) {
 	});
 }
 
-
-// Note that this method assumes policies are immutable. Any element that is
-// mutable would have to use a pattern similar to how the claims worked.
-function _getPolicy(policyId) {
-	if (!policyId) {
-		return Promise.reject("Missing policyId parameter");
-	}
-	// Leverage the index we created to sort by claimId and created date
-	const query = {
-		"selector": {
-			"type" : "policy",
-			"policyId": policyId
-		},
-		"sort": [
-			{
-				"type" : "asc"
-			},
-			{
-				"userId" : "asc"
-			},
-			{
-				"policyId" : "asc"
-			}
-		]
-	};
-
-	// Search all documents for this claim
-	return db.find(query).then((docs) =>  {
-		// if there are none, return null
-		if (!docs || docs.length === 0) {
-			return null;
-		}
-
-		return docs.docs[0];
-	});
-}
-
 // Note that this method assumes policies are immutable. Any element that is
 // mutable would have to use a pattern similar to how the claims worked.
 function _getUser(userId) {
@@ -268,38 +214,8 @@ function _getUser(userId) {
 	});
 }
 
-function _findOrCreateUser(name, provider, id) {
-	if (!name || !provider || !id) {
-		return Promise.reject("Missing name, provider, or id parameter");
-	}
 
-	return _findUserByIdentity(provider, id).then((userDetails) => {
-		if (userDetails) {
-			logger.log("Found user by identity ", provider, " ", id);
-			return userDetails;
-		} else {
-			logger.log("Did not find user, creating one for ", provider, " ", id);
-
-			const newUserDetails = {
-				"type" : "user",
-				"accountId" : null,
-				"name" : name,
-				"identity" : {
-					"provider" : provider,
-					"id" : id
-				}
-			};
-
-			return _createUser(newUserDetails).then((userId) => {
-				return userId;
-			}).then((userId) => {
-				return _getUser(userId);
-			});
-		}
-	});
-}
-
-// This function should technically the set of users by an identity, and other search methods should take multiples.
+// This function finds the set of users by an identity.
 function _findUserByIdentity(provider, id) {
 	if (!provider || !id) {
 		return Promise.reject("Missing provider or id parameter");
@@ -342,6 +258,36 @@ function _findUserByIdentity(provider, id) {
 }
 
 
+function _findOrCreateUser(name, provider, id) {
+	if (!name || !provider || !id) {
+		return Promise.reject("Missing name, provider, or id parameter");
+	}
+
+	return _findUserByIdentity(provider, id).then((userDetails) => {
+		if (userDetails) {
+			logger.log("Found user by identity ", provider, " ", id);
+			return userDetails;
+		} else {
+			logger.log("Did not find user, creating one for ", provider, " ", id);
+
+			const newUserDetails = {
+				"type" : "user",
+				"accountId" : null,
+				"name" : name,
+				"identity" : {
+					"provider" : provider,
+					"id" : id
+				}
+			};
+
+			return _createUser(newUserDetails).then((userId) => {
+				return userId;
+			}).then((userId) => {
+				return _getUser(userId);
+			});
+		}
+	});
+}
 
 /**
  * @function _listAllClaims
@@ -419,38 +365,6 @@ function _listUserClaims(userId) {
 }
 
 
-function _listAllPolicies() {
-	const query = {
-		"selector": {
-			"type" : "policy"
-		},
-		"sort": [
-			{
-				"type" : "asc"
-			},
-			{
-				"userId" : "asc"
-			},
-			{
-				"policyId" : "asc"
-			}
-		]
-	};
-
-	return db.find(query).then((docs) =>  {
-		logger.trace(`Found ${docs.docs.length} policies`);
-		// First, remove all except caseId, then make things unique
-		const cleanedDocs = __.map(docs.docs, (doc) => __.pickBy(doc, (v,k) => !__.startsWith(k,"_")));
-		// Second, group by id so that we can merge the changesets
-		const groupedDocs = __.groupBy(cleanedDocs, (doc) => doc.policyId);
-		// Finally, perform the merge
-		const unionDocs = __.map(groupedDocs, (docs) => __.merge({},...docs));
-		return unionDocs;
-	});
-}
-
-
-
 function _listUsers() {
 	const query = {
 		"selector": {
@@ -477,38 +391,6 @@ function _listUsers() {
 
 	return db.find(query).then((docs) =>  {
 		logger.trace(`Found ${docs.docs.length} users`);
-		// First, remove all except caseId, then make things unique
-		const cleanedDocs = __.map(docs.docs, (doc) => __.pickBy(doc, (v,k) => !__.startsWith(k,"_")));
-		// Second, group by id so that we can merge the changesets
-		const groupedDocs = __.groupBy(cleanedDocs, (doc) => doc.policyId);
-		// Finally, perform the merge
-		const unionDocs = __.map(groupedDocs, (docs) => __.merge({},...docs));
-		return unionDocs;
-	});
-}
-
-
-function _listUserPolicies(userId) {
-	const query = {
-		"selector": {
-			"userId": userId,
-			"type" : "policy"
-		},
-		"sort": [
-			{
-				"type" : "asc"
-			},
-			{
-				"userId" : "asc"
-			},
-			{
-				"policyId" : "asc"
-			}
-		]
-	};
-
-	return db.find(query).then((docs) =>  {
-		logger.trace(`Found ${docs.docs.length} policies`);
 		// First, remove all except caseId, then make things unique
 		const cleanedDocs = __.map(docs.docs, (doc) => __.pickBy(doc, (v,k) => !__.startsWith(k,"_")));
 		// Second, group by id so that we can merge the changesets
