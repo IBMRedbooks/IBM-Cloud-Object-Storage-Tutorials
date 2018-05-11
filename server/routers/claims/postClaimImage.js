@@ -92,19 +92,19 @@ function _processImage(req,res) {
 			} else {
 				resolve(data);
 			}
-		})
+		});
 	})
-	.then(data => {
+		.then(data => {
 		// create a unique key for object storage
-		let origKey = `original/${req.params.claimId}/${dateTime}/${file.filename}`;
-		// store key of original image in claimImageRecord for later retrieval
-		image.original = origKey;
+			let origKey = `original/${req.params.claimId}/${dateTime}/${file.filename}`;
+			// store key of original image in claimImageRecord for later retrieval
+			image.original = origKey;
 
-		// store the original user-uploaded image in a COS bucket
-		return cos.doCreateObject(cos.originalBucket, file.mimetype, origKey, data);
-	})
-	.then(() => {
-		logger.info("Uploaded original image to COS");
+			// store the original user-uploaded image in a COS bucket
+			return cos.doCreateObject(cos.originalBucket, file.mimetype, origKey, data);
+		})
+		.then(() => {
+			logger.info("Uploaded original image to COS");
 
 			// resize the image to get an normalized thumbnail
 			return imageProcessor.resize(file.path);
