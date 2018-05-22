@@ -11,24 +11,6 @@ const log4js = require("log4js");
 // global logger object
 const logger = log4js.getLogger("appid-service");
 
-// This function detects if we are in a local dev environment. For deployment,
-// we must return the actual external endpoint (host and port) that is used
-// to access the application. For many applications, this will be a load balancer
-// or front door.
-function getHostName() {
-	if (fs.existsSync(path.join(__dirname, "../localdev-config.json"))) {
-		return "http://localhost:3000";
-	} else {
-		// This is the IP address and NodePort for our Kubernetes service.
-		// More info on Kubernetes services here:
-		// https://console.bluemix.net/docs/containers/cs_network_planning.html#planning
-		// Replace this value with one of the following:
-		//   - Kubernetes Ingress, LoadBalancer or NodePort address for your app
-		//   - Cloud Foundry app route URL
-		return "http://173.193.79.251:30791";
-	}
-}
-
 
 module.exports = function(app, serviceManager){
 
@@ -49,7 +31,7 @@ module.exports = function(app, serviceManager){
 
 
 
-	var APPID_REDIRECT_URI = getHostName() + CALLBACK_URL;
+	var APPID_REDIRECT_URI = IBMCloudEnv.getString("appid_app_external_address") + CALLBACK_URL;
 	logger.info("APPID_REDIRECT_URI: " + APPID_REDIRECT_URI);
 
 	// The WebAppStrategy will allow our app's UI pages to redirect a user
