@@ -55,13 +55,6 @@
       "file:/server/localdev-config.json:$.appid_profiles_url"
     ]
   },
-  "appid_app_external_address": {
-    "searchPatterns": [
-      "cloudfoundry:$.AppID[0].credentials.appExternalAddress",
-      "env:service_appid:$.appExternalAddress",
-      "file:/server/localdev-config.json:$.appid_app_external_address"
-    ]
-  },
   "cos_original_bucket": {
     "searchPatterns": [
       "env:COS_ORIGINAL_BUCKET",
