@@ -5,11 +5,7 @@ module.exports = function(app) {
 	var router = express.Router();
 
 	router.get("/", function (req, res) {
-		if(serviceManager.get("cloudant")) {
-			res.json({ status: "UP" });
-		} else {
-			res.json({ status: "DOWN" });
-		}
+		res.json({status: "UP"});
 	});
 
 	app.use("/health", router);
