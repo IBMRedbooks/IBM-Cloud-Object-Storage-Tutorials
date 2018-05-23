@@ -4,6 +4,7 @@
   "appid_secret": "",
   "appid_oauth_server_url": "",
   "appid_profiles_url": "",
+  "appid_app_external_address": "",
   "cloudant_username": "",
   "cloudant_password": "",
   "cloudant_url": "",
