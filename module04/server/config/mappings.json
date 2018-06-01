@@ -1,0 +1,117 @@
+{
+  "cloudant_username": {
+    "searchPatterns": [
+      "cloudfoundry:$.cloudantNoSQLDB[0].credentials.username",
+      "env:service_cloudant:$.username",
+      "file:/server/localdev-config.json:$.cloudant_username"
+    ]
+  },
+  "cloudant_password": {
+    "searchPatterns": [
+      "cloudfoundry:$.cloudantNoSQLDB[0].credentials.password",
+      "env:service_cloudant:$.password",
+      "file:/server/localdev-config.json:$.cloudant_password"
+    ]
+  },
+  "cloudant_url": {
+    "searchPatterns": [
+      "cloudfoundry:$.cloudantNoSQLDB[0].credentials.url",
+      "env:service_cloudant:$.url",
+      "file:/server/localdev-config.json:$.cloudant_url"
+    ]
+  },
+  "appid_tenant_id": {
+    "searchPatterns": [
+      "cloudfoundry:$.AppID[0].credentials.tenantId",
+      "env:service_appid:$.tenantId",
+      "file:/server/localdev-config.json:$.appid_tenant_id"
+    ]
+  },
+  "appid_client_id": {
+    "searchPatterns": [
+      "cloudfoundry:$.AppID[0].credentials.clientId",
+      "env:service_appid:$.clientId",
+      "file:/server/localdev-config.json:$.appid_client_id"
+    ]
+  },
+  "appid_secret": {
+    "searchPatterns": [
+      "cloudfoundry:$.AppID[0].credentials.secret",
+      "env:service_appid:$.secret",
+      "file:/server/localdev-config.json:$.appid_secret"
+    ]
+  },
+  "appid_oauth_server_url": {
+    "searchPatterns": [
+      "cloudfoundry:$.AppID[0].credentials.oauthServerUrl",
+      "env:service_appid:$.oauthServerUrl",
+      "file:/server/localdev-config.json:$.appid_oauth_server_url"
+    ]
+  },
+  "appid_profiles_url": {
+    "searchPatterns": [
+      "cloudfoundry:$.AppID[0].credentials.profilesUrl",
+      "env:service_appid:$.profilesUrl",
+      "file:/server/localdev-config.json:$.appid_profiles_url"
+    ]
+  },
+  "cos_original_bucket": {
+    "searchPatterns": [
+      "env:COS_ORIGINAL_BUCKET",
+      "file:/server/localdev-config.json:$.cos_original_bucket"
+    ]
+  },
+  "cos_normalized_bucket": {
+    "searchPatterns": [
+      "env:COS_NORMALIZED_BUCKET",
+      "file:/server/localdev-config.json:$.cos_normalized_bucket"
+    ]
+  },
+  "cos_api_key": {
+    "searchPatterns": [
+      "cloudfoundry:$.cloud-object-storage.credentials.apikey",
+      "env:service_cos:$.apikey",
+      "file:/server/localdev-config.json:$.cos_api_key"
+    ]
+  },
+  "cos_service_instance_id": {
+    "searchPatterns": [
+      "cloudfoundry:$.cloud-object-storage.credentials.resource_instance_id",
+      "env:service_cos:$.resource_instance_id",
+      "file:/server/localdev-config.json:$.cos_service_instance_id"
+    ]
+  },
+  "cos_endpoint": {
+    "searchPatterns": [
+      "env:COS_ENDPOINT",
+      "file:/server/localdev-config.json:$.cos_endpoint"
+    ]
+  },
+  "cos_ibm_auth_endpoint": {
+    "searchPatterns": [
+      "env:COS_IBM_AUTH_ENDPOINT",
+      "file:/server/localdev-config.json:$.cos_ibm_auth_endpoint"
+    ]
+  },
+  "weather_company_data_url": {
+    "searchPatterns": [
+      "cloudfoundry:$.weatherinsights[0].credentials.url",
+      "env:service_weather_company_data:$.url",
+      "file:/server/localdev-config.json:$.weather_company_data_url"
+    ]
+  },
+  "weather_company_data_username": {
+    "searchPatterns": [
+      "cloudfoundry:$.weatherinsights[0].credentials.username",
+      "env:service_weather_company_data:$.username",
+      "file:/server/localdev-config.json:$.weather_company_data_username"
+    ]
+  },
+  "weather_company_data_password": {
+    "searchPatterns": [
+      "cloudfoundry:$.weatherinsights[0].credentials.password",
+      "env:service_weather_company_data:$.password",
+      "file:/server/localdev-config.json:$.weather_company_data_password"
+    ]
+  }
+}

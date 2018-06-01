@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Insurance Company X</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+
+  <!-- Custom styles -->
+  <link href="css/jumbotron.css" rel="stylesheet" />
+  <link href="css/styles.css" rel="stylesheet" />
+</head>
+
+<body>
+  <div class="bg1" id="background"></div>
+  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <a class="navbar-brand" href="/home">
+      <img src="/img/car-svgrepo-com.svg" width="30" height="30" class="d-inline-block align-top" alt="">
+      Insurance Company X
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="#">Products <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            My Account
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <a class="dropdown-item" id="allClaimsBtn" href="#">My Claims</a>
+            <a class="dropdown-item" href="#">My Policies</a>
+            <a class="dropdown-item" href="#">Manage your Account</a>
+          </div>
+        </li>
+      </ul>
+      <form class="form-inline" action="/logout">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Sign Out</button>
+      </form>
+    </div>
+  </nav>
+
+
+  <div class="container">
+
+    <!-- =============================== CLAIM LIST ======================= -->
+
+    <div id="allClaims" style="display:none">
+      <fieldset>
+        <div class="form-group">
+          <br/>
+          <legend>Choose your claim</legend>
+          <div class="form-group">
+            <table class="table" id="allClaimsTable">
+              <thead>
+                <tr>
+                  <th>Image</th>
+                  <th>Claim ID</th>
+                  <th>Timestamp</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="allClaimsTableBody"></tbody>
+            </table>
+          </div>
+      </fieldset>
+      </div>
+
+      <!-- =============================== EDIT CLAIM ======================= -->
+
+      <button id="editClaimButton" style="display:none"></button>
+
+      <div id="newClaim" style="display:none">
+        <fieldset>
+
+          <div class="form-group">
+            <!--
+               <br/>
+               <legend>Choose your policy for the claim</legend>
+               <div class="form-group">
+                     <select id="all_policies">
+                     </select>
+                </div>
+              -->
+            <br/>
+            <div class="form-group">
+              <legend>Your Policy Information</legend>
+            </div>
+            <div class="form-group">
+              <table class="table" id="policyDetails">
+                <thead>
+                  <tr>
+                    <th>Policy ID</th>
+                    <th>Name</th>
+                    <th>Your Insured Vehicle</th>
+                  </tr>
+                </thead>
+                <tbody id="policyTableBody">
+                  <tr>
+                    <td>110-342345-13</td>
+                    <td id="policyUserName"></td>
+                    <td>1999 Honda Civic - Red</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <br/>
+            <button id="retrieveClaimButton" style="display:none"></button>
+            <legend>Claim Summary</legend>
+            <table class="table" id="policyDetails">
+              <thead>
+                <tr>
+                  <th>Claim ID</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td id="claimSummaryId"></td>
+                </tr>
+              </tbody>
+            </table>
+            <div id="newClaimNumber"></div>
+            <br/>
+            <legend>Upload Images</legend>
+            <form>
+              <input type="file" name="userfile" id="userfile" />
+              <br/>
+              <input type="button" id="upload" value="upload" />
+            </form>
+            <br/>
+            <div id="uploadProgress"></div>
+            <container>
+              <br/>
+              <legend>Processed Images</legend>
+              <div id="car_back"></div>
+              <div id="car_right"></div>
+              <div id="car_front"></div>
+              <div id="car_left"></div>
+            </container>
+            <container>
+              <br/>
+              <legend>Image Details</legend>
+              <table class="table" id="imageDetails">
+                <thead>
+                  <tr>
+                    <th>Attribute Name</th>
+                    <th>Value</th>
+                  </tr>
+                </thead>
+                <tbody id="imageDetailsBody">
+                </tbody>
+              </table>
+            </container>
+            <container>
+              <br/>
+              <legend id="confirmClaimLegend" style="display:none">Save Claim</legend>
+              <button id="confirmClaimBtn" class="btn btn-info crud" type="button" style="display:none">Save Claim</button>
+            </container>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+
+    <main role="main">
+
+      <!-- =============================== JUMBOTRON ======================= -->
+      <!-- Main jumbotron for a primary marketing message or call to action -->
+      <div class="jumbotron" id="jumbotron">
+        <div class="container">
+          <h1 class="display-3"><i>Sit back and relax</i></h1>
+          <p>
+            With Insurance Company X, you don't need to worry about filling out lengthy forms. We use advanced AI to do all the heavy lifting for you, from recognizing the color and damage on your car, to when your accident happened. Just upload pictures of your car
+            and we'll handle the rest!
+          </p>
+          <p>
+            <button id="newClaimBtn" class="btn btn-primary btn-lg crud" type="button">Make a Claim &raquo;</button>
+          </p>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer" id="footer">
+      <div class="container">
+        <span class="text-muted">&copy; Insurance Company X 2017-2018</span>
+      </div>
+    </footer>
+
+    <script>
+      // See actions.js for client side application logic.
+      // Here, we've broken out UI manipulation to keep it
+      // near the display elements.
+
+      function uiDisplayAllClaims() {
+        document.getElementById("jumbotron").style.display = "none";
+        document.getElementById("background").style.display = "none";
+        document.getElementById("footer").style.display = "none";
+        document.getElementById("allClaims").style.display = "block";
+        document.getElementById("newClaim").style.display = "none"
+
+        history.pushState({
+          'page': 'allClaims'
+        }, 'My Claims - Insurance Company X', '/home/claims');
+      }
+
+
+      function uiDisplayEditClaim(claimId) {
+        document.getElementById("jumbotron").style.display = "none";
+        document.getElementById("background").style.display = "none";
+        document.getElementById("footer").style.display = "none";
+        document.getElementById("allClaims").style.display = "none";
+        document.getElementById("newClaim").style.display = "block"
+
+        document.getElementById("claimSummaryId").innerHTML = claimId;
+        history.pushState({
+          'page': 'editClaim',
+          'claimId': claimId
+        }, 'Edit Claim - Insurance Company X', '/home/claims/' + claimId);
+      }
+
+      function navEditClaim(claimId) {
+        document.getElementById("claimSummaryId").innerHTML = claimId;
+        $('#editClaimButton').trigger('click');
+      }
+    </script>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js">
+    </script>
+    <script src="js/actions.js"></script>
+    <script>
+      var jumboHeight = $('.jumbotron').outerHeight();
+
+      function parallax() {
+        var scrolled = $(window).scrollTop();
+        $('.bg').css('height', (jumboHeight - scrolled) + 'px');
+      }
+
+      $(window).scroll(function(e) {
+        parallax();
+      });
+    </script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=<API_KEY>">
+    </script>
+    <style>
+   /* Always set the map height explicitly to define the size of the div
+    * element that contains the map. */
+   #map {
+     height: 400px;
+     width: 100%;
+   }
+ </style>
+
+</body>
+
+</html>

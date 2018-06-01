@@ -1,0 +1,21 @@
+{
+  "name": "claimIndex",
+  "ddoc": "claimIndex",
+  "type": "json",
+  "index": {
+  "fields": [
+     {
+       "type" : "asc"
+     },
+     {
+       "userId": "asc"
+     },
+    {
+     "claimId": "asc"
+    },
+    {
+     "created": "asc"
+    }
+   ]
+  }
+}

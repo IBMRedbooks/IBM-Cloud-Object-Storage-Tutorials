@@ -1,0 +1,51 @@
+{
+  "name": "insurancewebappbackend",
+  "version": "1.0.0",
+  "description": "A generated IBM Cloud application",
+  "private": true,
+  "engines": {
+    "node": "^6.9.0"
+  },
+  "scripts": {
+    "start": "node server/server.js",
+    "debug": "chmod +x run-debug && ./run-debug",
+    "test": "nyc mocha",
+    "createClaim": "node ./claim-cli.js",
+    "dev": "nodemon server/server.js"
+  },
+  "nodemonConfig": {
+    "env": {
+      "NODE_HEAPDUMP_OPTIONS": "nosignal"
+    }
+  },
+  "dependencies": {
+    "@cloudant/cloudant": "^2.2.0",
+    "appmetrics-dash": "^3.3.2",
+    "appmetrics-prometheus": "^0.0.2",
+    "appmetrics-zipkin": "^1.0.4",
+    "bluemix-appid": "^3.0.6",
+    "body-parser": "^1.18.2",
+    "dms2dec": "^1.1.0",
+    "express": "^4.15.3",
+    "express-session": "^1.15.6",
+    "faker": "^4.1.0",
+    "ibm-cloud-env": "^0",
+    "ibm-cos-sdk": "^1.2.1",
+    "imagemagick": "^0.1.3",
+    "lodash": "^4.17.10",
+    "log4js": "^1.1.1",
+    "moment": "^2.22.1",
+    "multer": "^1.3.0",
+    "passport": "^0.4.0",
+    "uuid": "^3.2.1",
+    "watson-developer-cloud": "^3.4.0",
+    "which": "^1.3.0"
+  },
+  "devDependencies": {
+    "chai": "^4.0.0",
+    "eslint": "^4.19.1",
+    "mocha": "^3.4.2",
+    "nodemon": "^1.17.3",
+    "nyc": "^10.3.2"
+  }
+}

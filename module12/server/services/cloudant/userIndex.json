@@ -1,0 +1,24 @@
+{
+  "name": "userIndex",
+  "ddoc": "userIndex",
+  "type": "json",
+  "index": {
+   "fields": [
+     {
+       "type" : "asc"
+     },
+    {
+      "userId" : "asc"
+    },
+    {
+      "accountId" : "asc"
+    },
+    {
+      "identity.provider" : "asc"
+    },
+    {
+      "identity.id" : "asc"
+    }
+   ]
+  }
+}
